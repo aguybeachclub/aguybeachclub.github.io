@@ -222,6 +222,7 @@ function translateIngredients(text) {
 }
 
 
+
 // Guardar os textos originais da página
 const originalTexts = [];
 
@@ -237,25 +238,74 @@ function collectOriginalTexts() {
     while (node = walker.nextNode()) {
 
         if (node.nodeValue.trim() !== "") {
-
             originalTexts.push({
                 node: node,
                 original: node.nodeValue
             });
-
         }
     }
 }
 
 
-node.nodeValue
-            });
+// Traduções para português
+const portugueseTranslations = {
+    "DRINKS": "BEBIDAS",
+    "FOOD": "COMIDAS",
+    "LOCATION": "LOCALIZAÇÃO"
+};
+
+
+// Aplicar idioma
+function setLanguage(lang) {
+
+    const isEnglish = lang === "en";
+
+    originalTexts.forEach(function(item) {
+
+        const original = item.original;
+        const trimmed = original.trim();
+
+        let translated = original;
+
+        if (isEnglish) {
+
+            if (translations[trimmed]) {
+
+                translated = original.replace(
+                    trimmed,
+                    translations[trimmed]
+                );
+
+            } else if (
+                item.node.parentElement &&
+                item.node.parentElement.tagName === "SMALL"
+            ) {
+
+                translated = translateIngredients(original);
+
+            }
+
+        } else {
+
+            if (portugueseTranslations[trimmed]) {
+
+                translated = original.replace(
+                    trimmed,
+                    portugueseTranslations[trimmed]
+                );
+
+            }
 
         }
-    }
+
+        item.node.nodeValue = translated;
+
+    });
+
+    document.documentElement.lang = isEnglish ? "en" : "pt";
+
+    localStorage.setItem("language", lang);
 }
-
-
 // Botões PT / EN
 if ($("ptBtn")) {
     $("ptBtn").addEventListener("click", function() {
