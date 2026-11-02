@@ -248,45 +248,11 @@ function collectOriginalTexts() {
 }
 
 
-// Aplicar idioma
-function setLanguage(lang) {
-
-    const isEnglish = lang === "en";
-
-    originalTexts.forEach(function(item) {
-
-        const original = item.original;
-        const trimmed = original.trim();
-
-        let translated = original;
-
-        if (isEnglish) {
-
-            if (translations[trimmed]) {
-
-                translated = original.replace(
-                    trimmed,
-                    translations[trimmed]
-                );
-
-            } else if (
-                item.node.parentElement &&
-                item.node.parentElement.tagName === "SMALL"
-            ) {
-
-                translated = translateIngredients(original);
-
-            }
+node.nodeValue
+            });
 
         }
-
-        item.node.nodeValue = translated;
-
-    });
-
-    document.documentElement.lang = isEnglish ? "en" : "pt";
-
-    localStorage.setItem("language", lang);
+    }
 }
 
 
